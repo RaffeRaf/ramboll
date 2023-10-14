@@ -1,0 +1,71 @@
+﻿.loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    margin: -100px 0 0 -150px;
+}
+
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+input{
+    width: 100%;
+    padding: 12px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+th, td {
+    text-align: left;
+    width: 50px;
+    overflow: hidden;
+}
+
+tr:nth-child(uneven) {
+    background-color: #f2f2f2;
+}
+
+.pagination {
+    display: inline-block;
+}
+
+.pagination button {
+    float: left;
+    text-decoration: none;
+    background-color: #008CBA;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 4px;
+}
+
+.column-header {
+    cursor: pointer;
+}

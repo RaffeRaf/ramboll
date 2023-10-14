@@ -1,0 +1,398 @@
+﻿@page "/table"
+
+<PageTitle>Table with data</PageTitle>
+
+@using ramboll.Data
+@using ramboll.Models;
+@inject DataFetchingService DataFetchingService
+
+<h1>Table Demo</h1>
+
+<table class="sortable">
+    <thead>
+        <tr>
+            <th class="column-header" @onclick="@(async (args) => await SortBy("id"))">
+                <h3>
+                    Id
+                    
+                    @if (sortBy=="id")
+                    {
+                        if (order=="asc")
+                        {
+                            <b>&#x25be;</b>
+                        }
+                        else
+                        {
+                            <b>&#x25b4;</b>
+                        }
+                    }
+                </h3>
+            </th>
+
+            <th class="column-header" @onclick="@(async (args) => await SortBy("owner"))">
+                <h3>
+                    Owner
+
+                    @if (sortBy == "owner")
+                    {
+                        if (order == "asc")
+                        {
+                            <b>&#x25be;</b>
+                        }
+                        else
+                        {
+                            <b>&#x25b4;</b>
+                        }
+                    }
+                </h3>
+            </th>
+
+            <th class="column-header" @onclick="@(async (args) => await SortBy("country"))">
+                <h3>
+                    Country
+
+                    @if (sortBy == "country")
+                    {
+                        if (order == "asc")
+                        {
+                            <b>&#x25be;</b>
+                        }
+                        else
+                        {
+                            <b>&#x25b4;</b>
+                        }
+                    }
+                </h3>
+            </th>
+
+            <th class="column-header" @onclick="@(async (args) => await SortBy("docty"))">
+                <h3>
+                    Document type
+
+                    @if (sortBy == "docty")
+                    {
+                        if (order == "asc")
+                        {
+                            <b>&#x25be;</b>
+                        }
+                        else
+                        {
+                            <b>&#x25b4;</b>
+                        }
+                    }
+                </h3>
+            </th>
+
+            <th class="column-header" @onclick="@(async (args) => await SortBy("lang"))">
+                <h3>
+                    Language
+
+                    @if (sortBy == "lang")
+                    {
+                        if (order == "asc")
+                        {
+                            <b>&#x25be;</b>
+                        }
+                        else
+                        {
+                            <b>&#x25b4;</b>
+                        }
+                    }
+                </h3>
+            </th>
+
+            <th class="column-header" @onclick="@(async (args) => await SortBy("display_title"))">
+                <h3>
+                    Display title
+
+                    @if (sortBy == "display_title")
+                    {
+                        if (order == "asc")
+                        {
+                            <b>&#x25be;</b>
+                        }
+                        else
+                        {
+                            <b>&#x25b4;</b>
+                        }
+                    }
+                </h3>
+            </th>
+
+            <th class="column-header" @onclick="@(async (args) => await SortBy("repnb"))">
+                <h3>
+                    Report number
+
+                    @if (sortBy == "repnb")
+                    {
+                        if (order == "asc")
+                        {
+                            <b>&#x25be;</b>
+                        }
+                        else
+                        {
+                            <b>&#x25b4;</b>
+                        }
+                    }
+                </h3>
+            </th>
+
+        </tr>
+        <tr>
+            <th>
+                <input @bind=Id @oninput="@((e) => { Id=(string)e.Value!;})"
+                @onkeypress="KeywordEnterPressed" placeholder="Search by Id" />
+                
+            </th>
+            <th>
+                <input @bind=Owner @oninput="@((e) => { Owner=(string)e.Value!;})"
+                @onkeypress="KeywordEnterPressed" placeholder="Search by Owner" />
+            </th>
+            <th>
+                <input @bind=Count @oninput="@((e) => { Count=(string)e.Value!;})"
+                @onkeypress="KeywordEnterPressed" placeholder="Search by Counttry" />
+            </th>
+            <th>
+                <input @bind=Docky @oninput="@((e) => { Docky=(string)e.Value!;})"
+                @onkeypress="KeywordEnterPressed" placeholder="Search by Document type" />
+            </th>
+            <th>
+                <input @bind=Lang @oninput="@((e) => { Lang=(string)e.Value!;})"
+                @onkeypress="KeywordEnterPressed" placeholder="Search by Language" />
+            </th>
+            <th>
+                <input @bind=DisplayTitle @oninput="@((e) => { DisplayTitle=(string)e.Value!;})"
+                @onkeypress="KeywordEnterPressed" placeholder="Search by Display title" />
+            </th>
+            <th>
+                <input @bind=repnb @oninput="@((e) => { repnb=(string)e.Value!;})"
+                @onkeypress="KeywordEnterPressed" placeholder="Search by report number" />
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (data?.Documents is not null)
+        {
+            @foreach (var document in data.Documents)
+            {
+                <tr>
+                    <td>@document.Value.id</td>
+                    <td>@document.Value.owner</td>
+                    <td>@document.Value.count</td>
+                    <td>@document.Value.docty</td>
+                    <td>@document.Value.lang</td>
+                    <td>@document.Value.display_title</td>
+                    <td>@document.Value.repnb</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@if (data?.Documents is null)
+{
+    if (!HasLoaded)
+    {
+        <div class="loader"></div>
+    }
+
+    else
+    {
+        <div class="no-data"><h5>No data</h5></div>
+    }
+
+
+}
+else
+{
+    var pages = (double)data.Total / data.Rows;
+
+    if (pages-data.Page<5)
+    {
+        <div class="pagination">
+            @for(var i = 1; i<=pages+1; i++)
+            {
+                <button @onclick="@(async (args) => await SetPageNumber(i-1))">@(i) </button>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="pagination">
+
+            @if (data.Page>1)
+            {
+                <button @onclick="@(async (args) => await SetPageNumber(data.Page-1))">&laquo;</button>
+            }
+
+            <button @onclick="@(async (args) => await SetPageNumber(data.Page))">@data.Page </button>
+            <button @onclick="@(async (args) => await SetPageNumber(data.Page+1))">@(data.Page+1) </button>
+            <button @onclick="@(async (args) => await SetPageNumber(data.Page+2))">@(data.Page+2) </button>
+            <button @onclick="@(async (args) => await SetPageNumber(data.Page+3))">@(data.Page+3) </button>
+            <button @onclick="@(async (args) => await SetPageNumber(data.Page+4))">@(data.Page+4) </button>
+            <button @onclick="@(async (args) => await SetPageNumber(data.Page+5))">@(data.Page+5) </button>
+
+            @if (data.Page < pages-MaxPaginationCount)
+            {
+                <button @onclick="@(async (args) => await SetPageNumber(data.Page+1))">&raquo;</button>
+            }
+
+        </div>
+
+    }
+    
+
+    <div>Result @(data.Os+data.Documents.Count()) out of @data?.Total</div>
+}
+
+
+
+
+
+@code {
+    private DataResponse? data;
+    private string? Id;
+    private string? Owner;
+    private string? Count;
+    private string? Docky;
+    private string? Lang;
+    private string? DisplayTitle;
+    private string? repnb;
+    private int Os = 0;
+    private string? sortBy;
+    private string order = "desc";
+
+    private int MaxPaginationCount = 5;
+
+    private bool HasLoaded = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var parameters = new List<string>();
+        data = await DataFetchingService.GetDataAsync(parameters);
+    }
+
+    private async Task SortBy(string column)
+    {
+        if (order == "asc")
+        {
+            order = "desc";
+        }
+        else
+        {
+            order = "asc";
+        }
+
+
+        sortBy = column;
+
+        data = null;
+
+        HasLoaded = false;
+
+        StateHasChanged();
+
+        await Update();
+    }
+
+    private async Task SetPageNumber(int i)
+    {
+        Os = (i-1) * data!.Rows;
+
+        data = null;
+
+        HasLoaded = false;
+
+        StateHasChanged();
+
+        await Update();
+    }
+
+    protected async void KeywordEnterPressed(KeyboardEventArgs eventArgs)
+    {
+        if (eventArgs.Key == "Enter")
+        {
+            data = null;
+
+            HasLoaded = false;
+
+            Os = 0;
+            sortBy = null;
+            order = null;
+
+            StateHasChanged();
+
+            await Update();
+        }
+    }
+
+    protected async Task Update()
+    {
+        var parameters = new List<string>();
+        if (Id is not null)
+        {
+            var parameter = $"id={Id}";
+            parameters.Add(parameter);
+        }
+
+        if (Owner is not null)
+        {
+            var parameter = $"owner={Owner}";
+            parameters.Add(parameter);
+        }
+
+        if (Count is not null)
+        {
+            var parameter = $"count={Count}";
+            parameters.Add(parameter);
+        }
+
+        if (Docky is not null)
+        {
+            var parameter = $"docty={Docky}";
+            parameters.Add(parameter);
+        }
+
+        if (Lang is not null)
+        {
+            var parameter = $"lang={Lang}";
+            parameters.Add(parameter);
+        }
+
+        if (DisplayTitle is not null)
+        {
+            var parameter = $"display_title={DisplayTitle}";
+            parameters.Add(parameter);
+        }
+
+        if (repnb is not null)
+        {
+            var parameter = $"repnb={repnb}";
+            parameters.Add(parameter);
+        }
+
+        if (Os != 0)
+        {
+            var parameter = $"os={Os}";
+            parameters.Add(parameter);
+        }
+
+        if (sortBy is not null)
+        {
+            var parameter = $"sort={sortBy}&order={order}";
+            parameters.Add(parameter);
+        }
+
+        data = await DataFetchingService.GetDataAsync(parameters);
+
+        HasLoaded = true;
+
+        StateHasChanged();
+    }
+
+
+
+
+}
